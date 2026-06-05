@@ -4,6 +4,7 @@ import { getProgram, getClient, getProgramAlerts } from "@/lib/mock-data";
 import { KpiCard } from "@/components/kpi-card";
 import { HealthPill } from "@/components/status-pill";
 import { LifecycleFlow } from "@/components/lifecycle-flow";
+import type { StageMetrics } from "@/lib/mock-data";
 import { Activity, Clock, TrendingUp, XCircle, AlertTriangle, ArrowRight, FileText, UserPlus, Flag } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -59,7 +60,7 @@ function ProgramPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span>Dependencies:</span>
-            {program.stages.map((s, i) => (
+            {program.stages.map((s: StageMetrics, i: number) => (
               <span key={s.key} className="flex items-center gap-1">
                 <span className={`capitalize ${s.status === "critical" ? "text-critical" : s.status === "warning" ? "text-warning" : "text-healthy"}`}>{s.label}</span>
                 {i < program.stages.length - 1 && <ArrowRight className="h-3 w-3" />}
@@ -69,13 +70,13 @@ function ProgramPage() {
         </div>
         <LifecycleFlow stages={program.stages} />
 
-        {program.stages.some(s => s.status === "critical") && (
+        {program.stages.some((s: StageMetrics) => s.status === "critical") && (
           <div className="mt-4 flex items-start gap-3 rounded-lg border border-critical/30 bg-critical-soft/40 p-3">
             <AlertTriangle className="mt-0.5 h-4 w-4 text-critical" />
             <div className="text-sm">
               <div className="font-semibold text-critical">Downstream blockage detected</div>
               <div className="text-muted-foreground">
-                {program.stages.find(s => s.status === "critical")?.label} is failing — Final Output is blocked for the affected records.
+                {program.stages.find((s: StageMetrics) => s.status === "critical")?.label} is failing — Final Output is blocked for the affected records.
               </div>
             </div>
           </div>
