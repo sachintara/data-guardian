@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
 import { clients, programs } from "@/lib/mock-data";
 import { HealthPill } from "@/components/status-pill";
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/clients")({
 });
 
 function ClientsPage() {
+  const navigate = useNavigate();
   return (
     <AppShell title="Client Health" subtitle="Which clients require intervention?" breadcrumbs={[{ label: "Portfolio", to: "/" }, { label: "Clients" }]}>
       <div className="overflow-hidden rounded-xl border border-border bg-card">
@@ -32,7 +33,11 @@ function ClientsPage() {
             {clients.map(c => {
               const ps = programs.filter(p => p.clientId === c.id);
               return (
-                <tr key={c.id} className="border-b border-border last:border-0 transition-colors hover:bg-secondary/20">
+                <tr
+                  key={c.id}
+                  onClick={() => navigate({ to: "/clients/$clientId", params: { clientId: c.id } })}
+                  className="cursor-pointer border-b border-border last:border-0 transition-colors hover:bg-secondary/30"
+                >
                   <td className="px-4 py-3">
                     <Link to="/clients/$clientId" params={{ clientId: c.id }} className="font-medium text-foreground hover:text-info">{c.name}</Link>
                     <div className="mt-1 flex gap-0.5">
@@ -54,7 +59,17 @@ function ClientsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{c.owner}</td>
-                  <td className="px-4 py-3"><Link to="/clients/$clientId" params={{ clientId: c.id }}><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link></td>
+                  <td className="px-4 py-3">
+                    <Link
+                      to="/clients/$clientId"
+                      params={{ clientId: c.id }}
+                      aria-label={`Open ${c.name} detail`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-info/10 hover:text-info"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </td>
                 </tr>
               );
             })}
