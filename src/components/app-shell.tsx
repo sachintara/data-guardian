@@ -1,9 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { LayoutDashboard, Users, Workflow, Bell, Activity, Sparkles, Search, RefreshCw, Settings } from "lucide-react";
+import { LayoutDashboard, Users, Workflow, Bell, Activity, Sparkles, RefreshCw, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LiveDot } from "./status-pill";
 import { alerts } from "@/lib/mock-data";
+import { GlobalSearch } from "./global-search";
 
 const nav = [
   { to: "/", icon: LayoutDashboard, label: "Portfolio" },
@@ -84,11 +85,7 @@ export function AppShell({ children, title, subtitle, actions, breadcrumbs }: {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="hidden md:flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 text-sm text-muted-foreground w-64">
-                <Search className="h-3.5 w-3.5" />
-                <input className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground" placeholder="Search clients, programs, records..." />
-                <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>
-              </div>
+              <GlobalSearch />
               <button className="rounded-md border border-border bg-card p-2 text-muted-foreground hover:text-foreground">
                 <RefreshCw className="h-4 w-4" />
               </button>
