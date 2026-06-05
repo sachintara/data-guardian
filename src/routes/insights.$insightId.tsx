@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
-import { getInsight, insightDetails, getClient, getProgram } from "@/lib/mock-data";
+import { getInsight, insightDetails, getClient, getProgram, type InsightDetail } from "@/lib/mock-data";
 import { Sparkles, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Info, ArrowRight, ShieldCheck, Activity, FileText } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useEffect } from "react";
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/insights/$insightId")({
   loader: ({ params }) => {
     const insight = getInsight(params.insightId);
     if (!insight) throw notFound();
-    return { insight };
+    return { insight: insight as InsightDetail };
   },
   component: InsightDetail,
   notFoundComponent: () => <div className="p-10 text-muted-foreground">Insight not found</div>,
