@@ -98,7 +98,7 @@ function InsightDetail() {
           <div className="flex items-center gap-2 text-sm font-semibold"><ShieldCheck className="h-4 w-4 text-healthy" /> AI Validation</div>
           <p className="mt-1 text-xs text-muted-foreground">How the model verified this finding before surfacing it.</p>
           <ul className="mt-4 space-y-2">
-            {insight.validation.map((v, i) => (
+            {insight.validation.map((v: InsightDetail["validation"][number], i: number) => (
               <li key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background/40 p-3">
                 <span className="mt-0.5">
                   {v.status === "passed" ? <CheckCircle2 className="h-4 w-4 text-healthy" /> : v.status === "failed" ? <XCircle className="h-4 w-4 text-critical" /> : <Info className="h-4 w-4 text-info" />}
@@ -117,7 +117,7 @@ function InsightDetail() {
           <div className="flex items-center gap-2 text-sm font-semibold"><Activity className="h-4 w-4 text-info" /> Pattern Detection</div>
           <p className="mt-1 text-xs text-muted-foreground">Signals contributing to this insight, ranked by weight.</p>
           <ul className="mt-4 space-y-3">
-            {insight.patterns.map((p, i) => (
+            {insight.patterns.map((p: InsightDetail["patterns"][number], i: number) => (
               <li key={i} className="rounded-lg border border-border bg-background/40 p-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-sm font-medium">{p.label}</div>
@@ -170,7 +170,7 @@ function InsightDetail() {
           <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center gap-2 text-sm font-semibold"><FileText className="h-4 w-4 text-muted-foreground" /> Evidence</div>
             <ul className="mt-3 space-y-1.5 text-xs">
-              {insight.evidence.map((e, i) => (
+              {insight.evidence.map((e: string, i: number) => (
                 <li key={i} className="flex gap-2 text-muted-foreground"><span className="text-info">▸</span>{e}</li>
               ))}
             </ul>
