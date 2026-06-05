@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
-import { aiInsights } from "@/lib/mock-data";
-import { Sparkles, TrendingUp, AlertTriangle, ShieldCheck } from "lucide-react";
+import { insightDetails } from "@/lib/mock-data";
+import { Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Zap, Activity, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/insights")({
   head: () => ({ meta: [{ title: "AI Insights · Pulse OPS" }] }),
@@ -9,39 +10,41 @@ export const Route = createFileRoute("/insights")({
 });
 
 function InsightsPage() {
-  const extra = [
-    { id: "ai-4", text: "Fabrikam Insurance — Billing Feed shows duplicate composite keys (3.2%). Likely repeated ingestion from connector retry.", metric: "3.2% dupes", confidence: 0.79, kind: "warning" as const },
-    { id: "ai-5", text: "Cyberdyne IT — pipeline improved success rate by 4.7 pts in the last 7 days after rule v4.3 rollout.", metric: "+4.7 pts · 7d", confidence: 0.91, kind: "healthy" as const },
-    { id: "ai-6", text: "Across Healthcare segment, Quality Check failures cluster between 02:00–04:00 UTC — investigate batch window.", metric: "02:00–04:00 UTC", confidence: 0.68, kind: "info" as const },
-  ];
-  const all = [...aiInsights.map(i => ({ ...i, kind: "info" as const })), ...extra];
-  const iconFor = (k: string) => k === "warning" ? <AlertTriangle className="h-4 w-4 text-warning" /> : k === "healthy" ? <ShieldCheck className="h-4 w-4 text-healthy" /> : <TrendingUp className="h-4 w-4 text-info" />;
+  const iconFor = (k: string) =>
+    k === "anomaly" ? <AlertTriangle className="h-4 w-4 text-critical" /> :
+    k === "forecast" ? <Zap className="h-4 w-4 text-warning" /> :
+    k === "improvement" ? <ShieldCheck className="h-4 w-4 text-healthy" /> :
+    k === "trend" ? <TrendingUp className="h-4 w-4 text-info" /> :
+    <Activity className="h-4 w-4 text-info" />;
 
   return (
     <AppShell title="AI Insights" subtitle="Pattern detection across the portfolio" breadcrumbs={[{ label: "Portfolio", to: "/" }, { label: "Insights" }]}>
       <div className="mb-4 flex items-center gap-2 rounded-lg border border-info/30 bg-info-soft/30 p-3 text-sm">
         <Sparkles className="h-4 w-4 text-info" />
-        <span>Insights explain reasoning and cite supporting metrics. They never take action — humans decide.</span>
+        <span>Open any insight for the full AI validation, pattern detection, and recommended action. Use ← → to slide between insights.</span>
       </div>
       <div className="grid gap-3 md:grid-cols-2">
-        {all.map(i => (
-          <div key={i.id} className="rounded-xl border border-border bg-card p-5">
+        {insightDetails.map(i => (
+          <Link key={i.id} to="/insights/$insightId" params={{ insightId: i.id }} className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-info/40">
             <div className="flex items-start gap-3">
               {iconFor(i.kind)}
-              <div className="flex-1">
-                <div className="text-sm leading-snug">{i.text}</div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{i.kind}</span>
+                  <span className="font-mono text-[10px] text-muted-foreground">{i.id}</span>
+                </div>
+                <div className="mt-1 text-sm font-medium leading-snug">{i.headline}</div>
+                <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">{i.summary}</div>
                 <div className="mt-3 flex items-center justify-between text-[11px]">
                   <span className="font-mono text-info">{i.metric}</span>
                   <span className="text-muted-foreground">confidence {Math.round(i.confidence * 100)}%</span>
                 </div>
-                <div className="mt-3 flex gap-2">
-                  <button className="rounded-md border border-border bg-background/40 px-2.5 py-1 text-xs hover:bg-secondary">Investigate</button>
-                  <button className="rounded-md border border-border bg-background/40 px-2.5 py-1 text-xs hover:bg-secondary">Dismiss</button>
-                  <button className="rounded-md border border-border bg-background/40 px-2.5 py-1 text-xs hover:bg-secondary">Snooze 24h</button>
+                <div className="mt-3 inline-flex items-center gap-1 text-xs text-info opacity-0 transition-opacity group-hover:opacity-100">
+                  Open detail <ArrowRight className="h-3 w-3" />
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </AppShell>

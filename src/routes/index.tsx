@@ -90,13 +90,13 @@ function Index() {
           </div>
           <div className="mt-4 space-y-3">
             {aiInsights.map(i => (
-              <div key={i.id} className="rounded-lg border border-info/20 bg-info-soft/30 p-3">
+              <Link key={i.id} to="/insights/$insightId" params={{ insightId: i.id }} className="block rounded-lg border border-info/20 bg-info-soft/30 p-3 transition-colors hover:border-info/50">
                 <div className="text-sm text-foreground leading-snug">{i.text}</div>
                 <div className="mt-2 flex items-center justify-between text-[11px]">
                   <span className="font-mono text-info">{i.metric}</span>
                   <span className="text-muted-foreground">confidence {(i.confidence * 100).toFixed(0)}%</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
