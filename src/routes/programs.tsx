@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
 import { programs, clients } from "@/lib/mock-data";
 import { HealthPill } from "@/components/status-pill";
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/programs")({
 });
 
 function ProgramsPage() {
+  const navigate = useNavigate();
   const sorted = [...programs].sort((a, b) => {
     const order = { critical: 0, warning: 1, healthy: 2 } as const;
     return order[a.status] - order[b.status];
@@ -45,9 +46,15 @@ function ProgramsPage() {
             {sorted.map(p => {
               const client = clients.find(c => c.id === p.clientId)!;
               return (
-                <tr key={p.id} className="border-b border-border last:border-0 hover:bg-secondary/20">
-                  <td className="px-4 py-3"><Link to="/programs/$programId" params={{ programId: p.id }} className="font-medium hover:text-info">{p.name}</Link></td>
-                  <td className="px-4 py-3 text-muted-foreground">{client.name}</td>
+                <tr
+                  key={p.id}
+                  onClick={() => navigate({ to: "/programs/$programId", params: { programId: p.id } })}
+                  className="cursor-pointer border-b border-border last:border-0 transition-colors hover:bg-secondary/30"
+                >
+                  <td className="px-4 py-3"><Link to="/programs/$programId" params={{ programId: p.id }} onClick={(e) => e.stopPropagation()} className="font-medium hover:text-info">{p.name}</Link></td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    <Link to="/clients/$clientId" params={{ clientId: client.id }} onClick={(e) => e.stopPropagation()} className="hover:text-info">{client.name}</Link>
+                  </td>
                   <td className="px-4 py-3"><HealthPill health={p.status} /></td>
                   <td className="px-4 py-3 text-right tabular">{p.volume.toLocaleString()}</td>
                   <td className="px-4 py-3 text-right tabular text-healthy">{p.successRate}%</td>
@@ -55,7 +62,17 @@ function ProgramsPage() {
                   <td className="px-4 py-3 capitalize text-muted-foreground">{p.currentStage}</td>
                   <td className="px-4 py-3 text-right tabular text-muted-foreground">{(p.processingMs / 1000).toFixed(1)}s</td>
                   <td className="px-4 py-3"><HealthPill health={p.slaStatus} /></td>
-                  <td className="px-4 py-3"><Link to="/programs/$programId" params={{ programId: p.id }}><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link></td>
+                  <td className="px-4 py-3">
+                    <Link
+                      to="/programs/$programId"
+                      params={{ programId: p.id }}
+                      aria-label={`Open ${p.name} detail`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-info/10 hover:text-info"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </td>
                 </tr>
               );
             })}
