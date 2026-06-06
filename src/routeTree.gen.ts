@@ -14,6 +14,7 @@ import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClientsIndexRouteImport } from './routes/clients.index'
 import { Route as ProgramsProgramIdRouteImport } from './routes/programs.$programId'
 import { Route as InsightsInsightIdRouteImport } from './routes/insights.$insightId'
 import { Route as ClientsClientIdRouteImport } from './routes/clients.$clientId'
@@ -43,6 +44,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ClientsIndexRoute = ClientsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClientsRoute,
 } as any)
 const ProgramsProgramIdRoute = ProgramsProgramIdRouteImport.update({
   id: '/$programId',
@@ -75,17 +81,18 @@ export interface FileRoutesByFullPath {
   '/clients/$clientId': typeof ClientsClientIdRoute
   '/insights/$insightId': typeof InsightsInsightIdRoute
   '/programs/$programId': typeof ProgramsProgramIdRoute
+  '/clients/': typeof ClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRouteWithChildren
-  '/clients': typeof ClientsRouteWithChildren
   '/insights': typeof InsightsRouteWithChildren
   '/programs': typeof ProgramsRouteWithChildren
   '/alerts/$alertId': typeof AlertsAlertIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
   '/insights/$insightId': typeof InsightsInsightIdRoute
   '/programs/$programId': typeof ProgramsProgramIdRoute
+  '/clients': typeof ClientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +105,7 @@ export interface FileRoutesById {
   '/clients/$clientId': typeof ClientsClientIdRoute
   '/insights/$insightId': typeof InsightsInsightIdRoute
   '/programs/$programId': typeof ProgramsProgramIdRoute
+  '/clients/': typeof ClientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,17 +119,18 @@ export interface FileRouteTypes {
     | '/clients/$clientId'
     | '/insights/$insightId'
     | '/programs/$programId'
+    | '/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/alerts'
-    | '/clients'
     | '/insights'
     | '/programs'
     | '/alerts/$alertId'
     | '/clients/$clientId'
     | '/insights/$insightId'
     | '/programs/$programId'
+    | '/clients'
   id:
     | '__root__'
     | '/'
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/clients/$clientId'
     | '/insights/$insightId'
     | '/programs/$programId'
+    | '/clients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -180,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clients/': {
+      id: '/clients/'
+      path: '/'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof ClientsIndexRouteImport
+      parentRoute: typeof ClientsRoute
+    }
     '/programs/$programId': {
       id: '/programs/$programId'
       path: '/$programId'
@@ -224,10 +241,12 @@ const AlertsRouteWithChildren =
 
 interface ClientsRouteChildren {
   ClientsClientIdRoute: typeof ClientsClientIdRoute
+  ClientsIndexRoute: typeof ClientsIndexRoute
 }
 
 const ClientsRouteChildren: ClientsRouteChildren = {
   ClientsClientIdRoute: ClientsClientIdRoute,
+  ClientsIndexRoute: ClientsIndexRoute,
 }
 
 const ClientsRouteWithChildren =
