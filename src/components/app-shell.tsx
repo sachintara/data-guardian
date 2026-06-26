@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { LayoutDashboard, Users, Workflow, Bell, Activity, Sparkles, RefreshCw, Settings } from "lucide-react";
+import { LayoutDashboard, Users, Workflow, Bell, Activity, Sparkles, RefreshCw, Settings, BarChart2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LiveDot } from "./status-pill";
 import { alerts } from "@/lib/mock-data";
@@ -12,6 +12,7 @@ const nav = [
   { to: "/programs", icon: Workflow, label: "Programs" },
   { to: "/alerts", icon: Bell, label: "Alert Center" },
   { to: "/insights", icon: Sparkles, label: "AI Insights" },
+  { to: "/competitors", icon: BarChart2, label: "Competitors" },
 ] as const;
 
 export function AppShell({ children, title, subtitle, actions, breadcrumbs }: {
