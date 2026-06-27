@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>S03 — Wall of text response · Iteration 1 · Mal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:390px;min-height:844px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;background:#F5F4F0;overflow-x:hidden;}
+.annotation{background:#083D30;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.ann-left{display:flex;align-items:center;gap:10px;}
+.ann-num{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 8px;border-radius:100px;}
+.ann-title{color:rgba(255,255,255,0.8);font-size:11px;font-weight:500;}
+.ann-purpose{color:rgba(255,255,255,0.4);font-size:10px;font-style:italic;}
+.ann-tag{font-size:9px;font-weight:700;letter-spacing:0.08em;padding:2px 8px;border-radius:100px;}
+.ann-tag.fail{background:rgba(239,68,68,0.2);color:#FCA5A5;}
+.ann-tag.warn{background:rgba(245,158,11,0.2);color:#FCD34D;}
+.ann-tag.ok{background:rgba(74,222,128,0.15);color:#86EFAC;}
+.status-bar{height:44px;background:white;display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 8px;flex-shrink:0;}
+.status-time{font-size:15px;font-weight:600;color:#0D1C18;}
+.status-icons{display:flex;align-items:center;gap:6px;}
+.status-icon{width:16px;height:10px;background:#0D1C18;border-radius:2px;opacity:0.8;}
+.status-icon.signal{width:12px;height:10px;border-radius:1px;}
+.status-icon.battery{width:20px;height:10px;border-radius:2px;border:1.5px solid rgba(0,0,0,0.35);position:relative;background:transparent;}
+.status-icon.battery::after{content:'';position:absolute;left:2px;top:2px;bottom:2px;width:12px;background:#0D1C18;border-radius:1px;}
+.nav-bar{background:white;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #E5E2DA;flex-shrink:0;}
+.nav-title{font-size:17px;font-weight:600;color:#0D1C18;}
+.nav-icon{width:32px;height:32px;border-radius:50%;background:#F5F4F0;border:0.5px solid #E0DDD6;display:flex;align-items:center;justify-content:center;}
+.chat-area{flex:1;padding:12px;display:flex;flex-direction:column;gap:8px;overflow:hidden;}
+.ai-bubble{background:white;border:0.5px solid #E5E2DA;border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14px;color:#3D4B45;line-height:1.55;max-width:85%;box-shadow:0 1px 2px rgba(0,0,0,0.04);}
+.user-bubble{background:#083D30;color:white;border-radius:16px 16px 4px 16px;padding:10px 14px;font-size:14px;line-height:1.55;max-width:78%;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
+.fail-bubble{background:#FEF2F2;border:0.5px solid #FCA5A5;color:#7F1D1D;}
+.typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:white;border:0.5px solid #E5E2DA;border-radius:16px 16px 16px 4px;width:fit-content;}
+.t-dot{width:6px;height:6px;border-radius:50%;background:#C8C4BC;}
+.chips-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px;}
+.chip{font-size:13px;padding:6px 12px;border:0.5px solid #D4D0C8;border-radius:100px;color:#5A6B65;background:white;}
+.center-greeting{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:32px 20px;}
+.greeting-avatar{width:48px;height:48px;border-radius:50%;background:#E8F4F0;border:1.5px solid #A8D8C0;}
+.greeting-title{font-size:18px;font-weight:600;color:#0D1C18;text-align:center;}
+.greeting-sub{font-size:15px;color:#9E9B95;text-align:center;line-height:1.5;}
+.input-bar{background:white;border-top:0.5px solid #E5E2DA;padding:10px 16px;display:flex;gap:10px;align-items:center;flex-shrink:0;}
+.input-field{flex:1;height:36px;border:0.5px solid #D4D0C8;border-radius:18px;background:#F5F4F0;font-size:14px;color:#9E9B95;display:flex;align-items:center;padding:0 14px;font-family:inherit;}
+.send-btn{width:36px;height:36px;border-radius:50%;background:#083D30;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.bubble-time{font-size:11px;color:#C8C4BC;margin-top:2px;padding:0 2px;}
+.step-badge{background:#FEF2F2;border:0.5px solid #FCA5A5;border-radius:100px;padding:4px 10px;font-size:12px;color:#B91C1C;font-weight:600;align-self:center;margin:4px 0;}
+.section-hint{font-size:12px;color:#9E9B95;text-align:center;padding:8px 0;font-style:italic;}
+.notif-overlay{background:#1A1917;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.notif-app-icon{width:28px;height:28px;border-radius:8px;background:#083D30;flex-shrink:0;}
+.notif-content{flex:1;}
+.notif-app{font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);}
+.notif-msg{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.4;margin-top:1px;}
+.lock-overlay{background:#2A2A2A;position:absolute;top:0;left:0;right:0;z-index:10;}
+.lock-time{font-size:52px;font-weight:300;color:white;text-align:center;padding:40px 0 4px;}
+.lock-date{font-size:16px;color:rgba(255,255,255,0.6);text-align:center;margin-bottom:20px;}
+.fail-indicator{background:#FEF2F2;border:0.5px solid #FCA5A5;border-radius:10px;padding:8px 12px;margin:4px 0;font-size:12px;color:#B91C1C;line-height:1.45;}
+</style>
+</head>
+<body>
+<div style="display:flex;flex-direction:column;min-height:844px;">
+  <div class="annotation">
+    <div class="ann-left">
+      <div class="ann-num">S 03</div>
+      <div class="ann-title">Wall of text response</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="ann-purpose">Core failure — text cannot communicate financial data</div>
+      <div class="ann-tag fail">FAIL</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-time">9:41</div>
+    <div class="status-icons">
+      <div class="status-icon signal"></div>
+      <div class="status-icon"></div>
+      <div class="status-icon battery"></div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <div style="width:32px;"></div>
+    <div class="nav-title">Mal</div>
+    <div class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5A6B65" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="4" r="1.2"/><circle cx="12" cy="20" r="1.2"/></svg></div>
+  </div>
+  <div class="chat-area" style="background:#FFF8F8;">
+    <div class="user-bubble">how was my spending last month?</div>
+    <div class="bubble-time" style="align-self:flex-end;">9:41 AM</div>
+    <div class="ai-bubble fail-bubble">
+      Your May spending totaled AED 3,120, which is 12% higher than April's AED 2,786. Dining was your highest category at AED 890, followed by Groceries at AED 680, Transport at AED 340, Entertainment at AED 260, Transfers at AED 210, and Miscellaneous at AED 220. Your largest single transaction was AED 340 at Zuma Restaurant on May 18th. Compared to the previous month, your dining expenses increased by 38%, while groceries remained broadly stable at a 3% increase.
+    </div>
+    <div class="bubble-time">9:41 AM</div>
+    <div class="fail-indicator">6 categories in a paragraph. Users cannot see proportions, cannot compare categories at a glance, and must hold all six amounts in working memory simultaneously. The AI has correct data. The format makes it useless.</div>
+  </div>
+  <div class="input-bar">
+    <div class="input-field">Ask more…</div>
+    <div class="send-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+  </div>
+
+</div>
+</body>
+</html>
